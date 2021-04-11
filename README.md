@@ -1,5 +1,5 @@
-# LINEBOT template
-LINE botを開発するためのテンプレート
+# wikipedia random quiz bot
+wikipediaからランダムにクイズを出題するLINE bot
 
 ### 動かすためにやること
 - LINE BOTを作成する
@@ -11,7 +11,6 @@ LINE botを開発するためのテンプレート
     ```
     トークンはそれぞれ書き換えてください
 - ngrokとdockerをインストール
-  - macなら`brew install ngrok --cask`とか？
 
 ### 起動の仕方
 ```bash
