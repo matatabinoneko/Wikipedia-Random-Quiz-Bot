@@ -1,6 +1,7 @@
 from flask import Flask, request, abort
 from token_key import YOUR_CHANNEL_SECRET, YOUR_CHANNEL_ACCESS_TOKEN
-from library.quiz import make_quiz_button_template
+from library.quiz import Quiz
+
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -15,6 +16,9 @@ from linebot.models import (
 app = Flask(__name__)
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
+
+
+quiz = Quiz()
 
 
 @app.route("/callback", methods=['POST'])
@@ -38,16 +42,31 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if event.message.text == "\quiz":
-        message, button_messages = make_quiz_button_template()
+    user_id = event.source.user_id
+    if event.message.text == "選択クイズ":
+        send_messages = quiz.make_quiz(select=True)
         line_bot_api.reply_message(
             event.reply_token,
-            [message, button_messages]
+            send_messages
+        )
+    elif event.message.text == "記述クイズ":
+        send_messages = quiz.make_quiz(user_id=user_id)
+        line_bot_api.reply_message(
+            event.reply_token,
+            send_messages
         )
     else:
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="\quizと打つとクイズをだすよ！"))
+        send_messages = quiz.get_answer(user_id, event.message.text)
+        app.logger.debug(send_messages)
+        if send_messages:
+            line_bot_api.reply_message(
+                event.reply_token,
+                send_messages
+            )
+        else:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="「選択クイズ」と打つと選択形式のクイズをだすよ！\n「記述クイズ」と打つと自由記述形式のクイズをだすよ！"))
 
 
 @handler.add(PostbackEvent)
