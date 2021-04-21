@@ -40,7 +40,7 @@ class Quiz:
     def make_quiz(self, user_id, select=False,  select_option_num=4):
         self.reset(user_id)
         wiki_title, description, image_url, page_url = self.get_random_quiz_data()
-        app.logger.debug(f"wiki_title:{wiki_title}")
+        app.logger.info(f"wiki_title:{wiki_title}")
 
         reply_correct_sentence = f'正解！！\n{page_url}'
         reply_miss_sentence = f'不正解！！答えは「{wiki_title}」でした！\n{page_url}'

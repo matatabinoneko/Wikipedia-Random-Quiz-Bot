@@ -43,7 +43,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     user_id = event.source.user_id
-    app.logger.debug(user_id)
+    app.logger.info(user_id)
     if event.message.text == "選択クイズ":
         send_messages = quiz.make_quiz(user_id, select=True)
         line_bot_api.reply_message(
