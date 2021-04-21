@@ -37,8 +37,8 @@ class Quiz:
         self.user2answer[user_id]["correct"] = correct
         self.user2answer[user_id]["miss"] = miss
 
-
-    def make_quiz(self, select=False, select_option_num=4, user_id=None):
+    def make_quiz(self, user_id, select=False,  select_option_num=4):
+        self.reset(user_id)
         wiki_title, description, image_url, page_url = self.get_random_quiz_data()
         app.logger.debug(f"wiki_title:{wiki_title}")
 
